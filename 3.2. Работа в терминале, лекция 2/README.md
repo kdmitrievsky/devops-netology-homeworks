@@ -21,11 +21,15 @@
 	Пример без перенаправления:
 	
 	vagrant@vagrant:~$ ls -l /root | grep denied -c
+	
 	ls: cannot open directory '/root': Permission denied
+	
 	0
+	
 	Пример с перенаправлением:
 	
 	vagrant@vagrant:~$ ls -l /root 6>&2 2>&1 1>&6 | grep denied -c
+	
 	1
 
 9.	Команда cat /proc/$$/environ выведет переменные окружения для текущего процесса. Аналогичный вывод можно получит командами env и printenv.
