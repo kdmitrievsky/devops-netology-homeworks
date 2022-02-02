@@ -19,10 +19,12 @@
 
 8.	В качестве входного потока для pipe использовать только stderr команды можно через промежуточный дескриптор.
 	Пример без перенаправления:
+	
 	vagrant@vagrant:~$ ls -l /root | grep denied -c
 	ls: cannot open directory '/root': Permission denied
 	0
 	Пример с перенаправлением:
+	
 	vagrant@vagrant:~$ ls -l /root 6>&2 2>&1 1>&6 | grep denied -c
 	1
 
