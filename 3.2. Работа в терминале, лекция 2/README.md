@@ -51,7 +51,7 @@ vagrant@vagrant:~$ ls -l /root 6>&2 2>&1 1>&6 | grep denied -c
 
 
 11. 4.2 старшая версия набора инструкций SSE которую поддерживает процессор.  
-    Команда: **grep ssh /proc/cpuinfo**
+    Команда: **grep sse /proc/cpuinfo**
 
 
 12. Как я понимаю ssh ждет логина пользователя и шелл еще не запущен, локальный tty отсутствует.  
@@ -67,6 +67,29 @@ vagrant@vagrant:~$ ls -l /root 6>&2 2>&1 1>&6 | grep denied -c
 
 13. Получилось перенести **top** с **/dev/tty1** в **/dev/pts/2** (в screen) только изменив **kernel.yama.ptrace.scope=0** в **/etc/sysctl.d/10-ptrace.conf**  
 Судя по тексту ошибки, без этой настройки ядро разрешает манипулировать только дочерними процессами.  
+```
+vagrant@vagrant:~$ ps -an
+    PID TTY      STAT   TIME COMMAND
+    655 tty1     Ss     0:00 /bin/login -p --
+    998 tty1     S      0:00 -bash
+   1045 pts/0    Ss     0:00 -bash
+   1120 pts/0    S+     0:00 screen -S first
+   1123 pts/1    Ss     0:00 /bin/bash
+   1130 tty1     S+     0:00 top
+   1134 pts/1    R+     0:00 ps -an
+vagrant@vagrant:~$ reptyr 1130
+vagrant@vagrant:~$ ps -an
+    PID TTY      STAT   TIME COMMAND
+    655 tty1     Ss     0:00 /bin/login -p --
+    998 tty1     S      0:00 -bash
+   1045 pts/0    Ss     0:00 -bash
+   1120 pts/0    S+     0:00 screen -S first
+   1123 pts/1    Ss     0:00 /bin/bash
+   1130 pts/2    Ss+    0:02 top
+   1135 pts/1    S+     0:06 reptyr 1130
+   1137 tty1     Z      0:00 [top] <defunct>
+   1138 tty1     R+     0:00 ps -an
+vagrant@vagrant:~$
+```  
 
-
-14. Tee - команда записывающая информацию переданную на ее вход в один или несколько файлов. Если перенаправление “>” выполняется с правами shell, то с помощью sudo tee можно изменить права.  
+15. Tee - команда записывающая информацию переданную на ее вход в один или несколько файлов. Если перенаправление “>” выполняется с правами shell, то с помощью sudo tee можно изменить права.  
